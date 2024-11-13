@@ -1,0 +1,36 @@
+---
+title: "ANCOVA"
+output: github_document
+---
+
+## Analysis of Covariance
+
+If the experiment is well controlled and if it doesn't have any other variable except one factor, we can explain the change of the dependent variable by the one sample t-test or One-way ANOVA. However, we cannot come up with this perfect situation especially in the field of economics as a social science. 
+
+ANCOVA has numerical variables on top of ANOVA model. Ultimately, ANCOVA has same purpose as ANOVA in the sense of comparing mean differences among factors.
+
+This dataset contains the result of three treatments from Anorexia patients. The model is that shows the weight differences after treatments but we know that the Post and Pre-weight have a storong correlation. In other words, we can easily expect that the patient who has a high weight has a high chance of a big weight loss after the treatment. So, instead of ANOVA, we use the model $Post-weight = Pre-weight + Treat + \epsilon$.
+
+```{r}
+library(multcomp)
+anorexia=read.csv("data/anorexia.csv")
+attach(anorexia)
+Treat=relevel(Treat, ref="Cont") # Change Cont as the reference group. 
+# levels(Treat) = c("Count","CBT", "FT") also possible
+
+out=lm(Postwt ~ Prewt + Treat, data=anorexia)
+anova(out)
+summary(out)
+```
+
+From the ANOVA p-value=0.0008438 above, we can conclude that the treatments have significant effect of the weight loss. In addition, from the regression result, all the p-values are significant. However, we cannot conclude which treatment has the better impact on the weight loss.
+
+To verify the impact differences among the treatments, we are going to use the Tukey method.
+
+```{r ancova}
+dunn=glht(out, linfct=mcp(Treat = "Tukey"))
+summary(dunn)
+plot(dunn)
+```
+
+The result suggest each different method is significant in 10% level. Especially, the difference between FT and Cont is 0.1% level.

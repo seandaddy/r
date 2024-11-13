@@ -1,0 +1,27 @@
+---
+title: "Two-way ANOVA"
+output: github_document
+---
+
+## Data
+
+This data is SAT scores and GPA for every student who entered the University of Texas at Austin at 2000 and graduated within 6 years. As a two-way ANOVA model, we want to analyze the impact from 2 factor variables as well as the interaction between them.
+
+```{r sat}
+sat = read.csv("ut2000.csv")
+attach(sat)
+tapply(SAT.C, list(Gender,School),mean)
+boxplot(SAT.Q~Gender+School, col="blue", data=sat)
+interaction.plot(Gender, School, SAT.Q, col=c("blue","red"))
+
+out=lm(SAT.Q~Gender*School,data=sat)
+out1=lm(SAT.Q~Gender+School+Gender*School,data=sat)
+out2=lm(SAT.Q~Gender+School,data=sat)
+
+anova(out)
+summary(out1)
+summary(out2)
+
+par(mfrow=c(2,2))
+plot(out)
+```

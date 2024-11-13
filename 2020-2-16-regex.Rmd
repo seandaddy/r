@@ -1,0 +1,40 @@
+---
+title: "Simple Linear Regression"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Import data and store regression results
+
+데이터 불러오기 및 단순회귀분석 결과 저장
+
+```{r cars}
+setwd("/Users/sangyongoh/Documents/R script")
+cars = read.csv("data/cars.csv")
+out1=lm(dist~speed,data=cars)
+out2=lm(log(dist)~speed,data=cars)
+out3=lm(sqrt(dist)~speed,data=cars)
+out4=lm(sqrt(dist)~speed-1,data=cars)
+```
+
+## Including Plots
+
+```{r pressure, echo=FALSE}
+plot(dist~speed, data=cars, col="blue")
+abline(out1, col="red")
+
+plot(log(dist)~speed, data=cars, col="blue")
+abline(out2, col="red")
+
+plot(sqrt(dist)~speed, data=cars, col="blue")
+abline(out3, col="red")
+
+plot(sqrt(dist)~speed-1, data=cars, col="blue")
+abline(out4, col="red")
+summary(out4)
+par(mfrow=c(2,2))
+plot(out4)
+```

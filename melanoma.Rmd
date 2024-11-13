@@ -1,0 +1,27 @@
+---
+title: "Poisson Regression"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Poisson Regression
+
+When we perform a table analysis, logistic regression and log-linear models are most likely. Logistic regression deal with the ratio of odds but Poisson does the fixed amount as total number observation.
+
+$ log \mu = \beta X $
+
+## Example
+
+This is data about melanoma cases, in other words skin cancers.
+
+```{r}
+mela=read.csv("data/melanoma.csv")
+mel=xtabs(cases~age+region, data=mela)
+out=glm(cases~age+region, family=poisson,offset=log(total),data=mela)
+summary(out)
+mu=fitted(out)
+cbind(mela[,c(1,2)], cases=rpois(12,mu))
+```

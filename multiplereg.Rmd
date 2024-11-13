@@ -1,0 +1,29 @@
+---
+title: "Multiple Regression"
+output: github_document
+---
+
+## Analysis and Interpretation
+
+Pair Plot
+
+```{r attitude}
+pairs(attitude)
+```
+
+## Find the best model
+
+```{r}
+out=lm(rating~., data=attitude)
+out2=lm(rating~complaints+learning+advance, data=attitude)
+out3=lm(rating~complaints+learning, data=attitude)
+anova(out3, out2, out)
+```
+
+Attitude is the data from RStudio. We can get some valualbe example to find out the best model by following the step. Using ANOVA, anova(small model, large model), we can compare each model through the F-stat. 
+
+```{r}
+summary(out3)
+```
+
+In this example, the regression model 3, (rating=complaints+learning) is the best among three models.

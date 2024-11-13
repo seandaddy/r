@@ -1,0 +1,31 @@
+---
+title: "Tables"
+output: github_document
+---
+
+## Fisher's Exact Test
+
+The story of Fisher's exact test are as follows:
+"Ronald Fisher, a Bad Cup of Tea, and the Birth of Modern Statistics", [https://www.sciencehistory.org/distillations/ronald-fisher-a-bad-cup-of-tea-and-the-birth-of-modern-statistics]
+
+```{r}
+teat=matrix(c(4,0,0,4), ncol=2)
+fisher.test(teat)
+chisq.test(teat)
+```
+
+As we can see the result, Dr. Bristol's ability is statistically significant with 5% critical level. Because of the number of observation, only 8 here makes a little gap between Fisher's exact test and Chi square test but they will converge on the same value as the sample size increases.
+
+## Cochran-Armitage Trend Test
+
+Sometimes we want to anaylyze the results as the intensity increases. However, the maximum intensity can bring some side-effect too. In this scenario, we would better use Chi square test as well to compare the results.
+
+
+
+```{r}
+prop.trend.test(c(13,10,10),c(42,14,28))
+x=matrix(c(13,29,10,4,10,18), ncol=3)
+chisq.test(x)
+```
+
+One thing we need to note is that when you use the trend test, we use the ratio between one dependent variable and the sum.
