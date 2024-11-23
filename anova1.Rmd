@@ -1,0 +1,57 @@
+---
+title: "One-Way ANOVA"
+output: github_document
+---
+
+## Introduction
+
+The hypotheses of one way ANOVA are as follows:
+$H_0 : \mu_1 =\mu_2 = \mu_3 $
+$H_1 : \mu_1 \neq \mu_2 ~or~ \mu_2 \neq \mu_3~or~ \mu_3 \neq \mu_1 $
+
+Basically we are going to test the weight differences among the positions in MLB. We chose 5 teams's 25 active roster data from mlb.com. To perform the analysis, we need to reshape the dataset form the wide to the long form.
+
+```{r}
+library(multcomp) # Multiple Comparisons Package
+library(dplyr) #Reshaping data
+mlbw = read.csv("mlbw.csv")
+id <- rownames(mlbw)
+mlbw <- cbind(id=id, mlbw)
+mlbl = reshape(data=mlbw, idvar="id",
+               varying = c("Pitchers","Infielder","Outfielder"),
+               v.name=c("wt"),
+               times=c("Pitchers","Infielder","Outfielder"),
+               new.row.names = 1:1000,
+               direction="long")
+mlb<-na.omit(mlbl)
+mlb <- mlb %>% rename(pos = time)
+mlb$pos = as.factor(mlb$pos)
+```
+
+```{r mlb1}
+boxplot(wt~pos, data=mlb)
+
+out=lm(wt~pos, data=mlb)
+anova(out)
+par(mfrow=c(2,2))
+plot(out)
+shapiro.test(resid(out))
+
+dunnett = glht(out, linfct= mcp(pos = "Dunnett"))
+tukey = glht(out, linfct= mcp(pos = "Tukey"))
+summary(dunnett)
+summary(tukey)
+par(mfrow=c(2,1))
+plot(dunnett)
+plot(tukey)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

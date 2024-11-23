@@ -1,0 +1,62 @@
+---
+title: "Nonlinear Regression"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Pharmacokinetics
+
+One of the most important study that applys the nonlinear regression is Pharmacokinetics. It is the study about the absorption, distribution, digestion, and discharge of the drugs.
+
+## One Compartment Model
+
+The basic model is as follows:
+$ C_t = C_0 e^{-Kt}. $
+
+When you take a drug, the blood concentration has the maximum value as, $ C_0 $ and then exponentilaly decreases as time, t, goes. The elimination rate is K.
+
+```{r one}
+library("investr")
+onecomp=read.csv("data/one_comp.csv")
+one=nls(conc~C0*exp(-K*time),start=list(C0=41.3,K=0.64),data=onecomp)
+summary(one)
+plotFit(one)
+```
+
+## Two Compartment Model 
+
+This model is adding one more term in addition to the previous model.
+$ C_t = A_1 e^{-\beta_1 t} + A_2 e^{-\beta_2 t}.$ 
+
+```{r two}
+twocomp=read.csv("data/two_comp.csv")
+two=nls(conc~SSbiexp(time, A1, lrc1, A2, lrc2), data=twocomp)
+summary(two)
+plotFit(two)
+```
+
+## One Compartment Model : Oral Dosage 
+
+This model shows the blood concentration when the drug is taken by oral dosage.
+$ C_t = \frac{D k_a k_e}{Cl(k_a + k_e)}(e^{-k_e t} + e^{-k_a t}).$ 
+
+```{r oral}
+oraldose=read.csv("data/oral_dose.csv")
+oral=nls(conc~SSfol(Dose=4.4, time, lKe, lKa, lCl), data=oraldose)
+summary(oral)
+plotFit(oral, xlim=c(0,35))
+```
+
+## Michaelis-Menten Model
+
+$ v= \frac{V_m x}{K+x}.$ 
+
+```{r MM}
+mime=read.csv("data/MM.csv")
+mm=nls(rate~SSmicmen(conc,Vm,K), data=mime)
+summary(mm)
+plotFit(mm, ylim=c(0,130), xlim=c(0,400))
+```
