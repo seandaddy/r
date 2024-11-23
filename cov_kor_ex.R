@@ -30,7 +30,7 @@ pdata <- pdata.frame(mydata, index=c("Country", "quarter"))
 oecd_pdata <- pdata.frame(oecd_data, index=c("Country", "quarter"))
 non_oecd_pdata <- pdata.frame(non_oecd_data, index=c("Country", "quarter"))
 
-eq1 <- log(Export1) ~ log(GDP1) + log(Dist1) + Rta + LFFC + Strict1 + Cases1
+eq1 <- log(Export1) ~ log(GDP1) + log(Dist1) + Rta + Strict1 + Cases1
 
 # Pooled OLS estimator
 # pooling <- plm(eq1, data=pdata, model= "pooling")
@@ -84,7 +84,7 @@ add.lines <- list(
 stargazer(random, non_oecd_random, oecd_random,
           omit = "cindex",
           dep.var.labels=c("Random", "OECD", "Non-OECD"),
-          covariate.labels=c("ln(GDP)","ln(Distance)","FTA", 'LKR', "Stringency", "Case"),
+          covariate.labels=c("ln(GDP)","ln(Distance)","FTA", "Stringency", "Case"),
           type = "latex",
           add.lines = add.lines,
           digits = 3)
